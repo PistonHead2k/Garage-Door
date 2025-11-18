@@ -93,6 +93,7 @@ int main(void)
         //Start Moving Garage Door
         static flag Start;
         
+
         Start ^= Pulse.Falling(RemoteInput);
 
 
