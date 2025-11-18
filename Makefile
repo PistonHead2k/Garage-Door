@@ -2,6 +2,9 @@
 
 #--Configuration-----------------------------------------------------------------------------------#
 
+#Where ELF, Obj, Etc are stored
+FOLDER = ELF
+
 #-mmcu means Microcontroler I.E. -mmcu=atmega328p, ...2560..., etc
 MCU  = atmega328
 #-O means Optimization I.E. -O0, -O1, -O2, -O3, -Os.
@@ -23,24 +26,24 @@ defualt: burn
 
 #--C----------------------------------------------------------------------------------------------#
 buildc:
-	avr-gcc $(OPTM) -fno-exceptions -mmcu=$(MCU) main.c -o Debug/main.elf $(LIBS)
+	avr-gcc $(OPTM) -fno-exceptions -mmcu=$(MCU) main.c -o $(FOLDER)/main.elf $(LIBS)
 
 burnc: buildc
-	avr-objcopy -O ihex -R .eeprom Debug/main.elf Debug/main.hex
+	avr-objcopy -O ihex -R .eeprom $(FOLDER)/main.elf $(FOLDER)/main.hex
 
-	avrdude -F -V -c arduino -p m328p -P $(PORT) -b $(BAUD) -U Debug/main.hex
+	avrdude -F -V -c arduino -p m328p -P $(PORT) -b $(BAUD) -U $(FOLDER)/main.hex
 
 #-------------------------------------------------------------------------------------------------#
 
 #--C++--------------------------------------------------------------------------------------------#
 build:
-	avr-c++ $(OPTM) -finput-charset=UTF-8 -fno-exceptions -mmcu=$(MCU) main.cpp -o Debug/main.elf $(LIBS)
+	avr-c++ $(OPTM) -finput-charset=UTF-8 -fno-exceptions -mmcu=$(MCU) main.cpp -o $(FOLDER)/main.elf $(LIBS)
 
 burn: build
 	
-	avr-objcopy -O ihex -R .eeprom Debug/main.elf Debug/main.hex
+	avr-objcopy -O ihex -R .eeprom $(FOLDER)/main.elf $(FOLDER)/main.hex
 
-	avrdude -F -V -c arduino -p m328p -P $(PORT) -b $(BAUD) -U Debug/main.hex
+	avrdude -F -V -c arduino -p m328p -P $(PORT) -b $(BAUD) -U $(FOLDER)/main.hex
 
 	$(MAKE) rs232
 
@@ -49,13 +52,13 @@ burn: build
 #--C++ Pedantic Build-----------------------------------------------------------------------------#
 #Pedantic Build
 test:
-	avr-c++ -Wall -Werror -Wpedantic $(OPTM) -fno-exceptions -mmcu=$(MCU) main.cpp -o Debug/main.elf
+	avr-c++ -Wall -Werror -Wpedantic $(OPTM) -fno-exceptions -mmcu=$(MCU) main.cpp -o $(FOLDER)/main.elf
 
 #-------------------------------------------------------------------------------------------------#
 
 #--Size-------------------------------------------------------------------------------------------#
 size:
-	avr-size -C --mcu=$(MCU) Debug/main.elf
+	avr-size -C --mcu=$(MCU) $(FOLDER)/main.elf
 	
 #-------------------------------------------------------------------------------------------------#
 
