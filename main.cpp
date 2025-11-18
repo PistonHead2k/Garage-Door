@@ -92,6 +92,7 @@ int main(void)
         static Electric::Pulse Pulse;
         //Start Moving Garage Door
         static flag Start;
+        
         Start ^= Pulse.Falling(RemoteInput);
 
 
