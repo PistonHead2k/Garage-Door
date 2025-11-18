@@ -86,14 +86,19 @@ int main(void)
         bit MotorOpen;
         bit MotorClose;
 
-        bit RemoteInput = Debounce1.InputT(~PCIN2, 2);
+        bit RemoteInput = Debounce1.Input(~PCIN2, 2);
+
 
         static Electric::Pulse Pulse;
-        Pulse.Falling(RemoteInput);
-        MotorOpen = RemoteInput;
+        //Start Moving Garage Door
+        static flag Start;
+        Start ^= Pulse.Falling(RemoteInput);
 
-        P.B1 = MotorOpen;
-        P.B2 = MotorClose;
+
+        MotorOpen = Start;
+
+        P.B1 = !MotorOpen;
+        P.B2 = !MotorClose;
 
 
         //Timer::DeltaT(Timer::Micros()); //Calculates Loop DT
