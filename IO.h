@@ -222,31 +222,36 @@ struct Pulse
 #define flag bit
 
     
-    private: flag FallFlag;
+    private: flag ActualF;
     /* Ouptuts one cycle pulse at the Falling Edge for a given input */
-    public: bit Falling(bit In)
+    public: inline bit Falling(bit In)
     {
-        FallFlag = !(!FallFlag | !In);
-             
-        bit Out = ON;
+       bool LastCycle = ActualF;
+        ActualF = !In;
+        bit Out = OFF;
+        
+        Out = (!ActualF & LastCycle); //If i want to out 2 cycles instead of 1: Out = Actual ^ LastCycle;
+     
+        if (Out) USART::Debug::SendString("ON");
 
-        FallFlag = !FallFlag & In;
-        Out = !FallFlag;
         return Out;
     }
 
-    private: flag RiseFlag;
+    private: flag ActualR;
     /* Ouptuts one cycle pulse at the Rising Edge for a given input */
     public: bit Rising(bit In)
     {
-        RiseFlag = !(!RiseFlag | !In);
-             
-        bit Out = ON;
+        bool LastCycle = ActualR;
+        ActualR = In;
+        bit Out = OFF;
+        
+        Out = (!ActualR & LastCycle); //If i want to out 2 cycles instead of 1: Out = Actual ^ LastCycle;
+     
+        if (Out) USART::Debug::SendString("ON");
 
-        RiseFlag = !RiseFlag & In;
-        Out =!RiseFlag;
         return Out;
     }
+    
 
 };
 };

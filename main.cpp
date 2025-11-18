@@ -89,7 +89,8 @@ int main(void)
         bit RemoteInput = Debounce1.InputT(~PCIN2, 2);
 
         static Electric::Pulse Pulse;
-        MotorOpen = Pulse.Rising(RemoteInput);
+        Pulse.Falling(RemoteInput);
+        MotorOpen = RemoteInput;
 
         P.B1 = MotorOpen;
         P.B2 = MotorClose;
