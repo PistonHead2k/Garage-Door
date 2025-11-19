@@ -127,7 +127,7 @@ struct Debounce
     public: bool InputT(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
     {   
         bool LastCycle = Actual;
-        Actual = OnRisingEdge(PIN, PINNumber);//(PIN & ON << PINNumber) >> PINNumber;
+        Actual = OnFallingEdge(PIN, PINNumber);//(PIN & ON << PINNumber) >> PINNumber;
         
         bool Out;
 
@@ -143,8 +143,24 @@ struct Debounce
 
     }
 
-    /* Debounce Input Class */
+    /* Debounce Input Falling Edge Class */
     public: bool Input(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
+    {   
+        bool LastCycle = Actual;
+        Actual = OnFallingEdge(PIN, PINNumber);//(PIN & ON << PINNumber) >> PINNumber;
+        
+        bool Out = OFF;
+
+        if (LastCycle && !Actual)
+        {
+            Out = ON;
+        }
+
+        return Out;
+    }
+
+    /* Debounce Input Rising Edge Class */
+    public: bool InputR(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
     {   
         bool LastCycle = Actual;
         Actual = OnRisingEdge(PIN, PINNumber);//(PIN & ON << PINNumber) >> PINNumber;
@@ -167,7 +183,7 @@ struct Debounce
         
         bool Out;
 
-        if (!Actual) 
+        if (Actual) 
         {
             TimeElapsedR = TimeRef;
             Out = OFF;

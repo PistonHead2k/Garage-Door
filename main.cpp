@@ -88,26 +88,26 @@ int main(void)
         static Timer::Subroutine T1;
         T1.Wait(0.5f, &TS1);
 
-        bit MotorOpen;
-        bit MotorClose;
-
         /* Remote Control Pulse Input */
         bit RemoteInput = Debounce1.Input(~PCIN2, 2);
         /* Endstop Open Pulse Input */
-        bit EndOpenInput = Debounce2.Input(~PCIN2, 3);
+        bit EndOpenInput = Debounce2.InputR(~PCIN2, 3);
         /* Endstop Close Pulse Input */
-        bit EndCloseInput = Debounce3.Input(~PCIN2, 4);
+        bit EndCloseInput = Debounce3.InputR(~PCIN2, 4);
 
         if (EndOpenInput) USART::Debug::SendString("OPEN ENDSTOP");
         if (EndCloseInput) USART::Debug::SendString("CLOSE ENDSTOP");
 
-
+        bit MotorOpen;
+        bit MotorClose;
        
         //Start Moving Garage Door
         static flag Start;
         static Electric::Pulse Pulse0;
         Start ^= Pulse0.Falling(RemoteInput);
 
+        Start ^= MotorOpen & EndOpenInput;
+        Start ^= MotorClose & EndCloseInput;
 
         static Electric::Pulse Pulse1;
         flag Dir;
