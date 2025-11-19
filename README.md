@@ -1,8 +1,5 @@
 AVR AtMega328p Garage Door MCU
 <div></div>
+Designed and tested by Mateo Proruk
 
-GPIO:
-Physical Pin | PORT | Use                          |
-4            |      |                              |             
-5            |      |                              |    
-6            |      |                              |    
+
