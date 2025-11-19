@@ -13,7 +13,7 @@ OPTM = -O3
 LIBS = -lm -lc
 
 #-P means PORT. in Windows: COM1, COM2, COM3, etc.
-PORT = COM3
+PORT = COM15
 #-b means Port Speed in Bauds.
 BAUD = 115200
 

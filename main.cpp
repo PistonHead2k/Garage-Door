@@ -89,16 +89,19 @@ int main(void)
         bit RemoteInput = Debounce1.Input(~PCIN2, 2);
 
 
-        static Electric::Pulse Pulse;
+       ;
         //Start Moving Garage Door
         static flag Start;
-        
+        static Electric::Pulse Pulse0;
+        Start ^= Pulse0.Falling(RemoteInput);
 
-        Start ^= Pulse.Falling(RemoteInput);
 
+        static Electric::Pulse Pulse1;
+        flag Dir;
+        Dir ^= Pulse1.Falling(Start);
 
-        MotorOpen = Start;
-
+        MotorOpen = Dir & Start;
+        MotorClose = !Dir & Start;
         P.B1 = !MotorOpen;
         P.B2 = !MotorClose;
 
