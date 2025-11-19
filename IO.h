@@ -124,7 +124,7 @@ struct Debounce
     private: bool Actual;
     
     /* Debounce Input Toggle Class */
-    public: bool InputT(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
+    public: volatile inline bool InputT(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
     {   
         bool LastCycle = Actual;
         Actual = OnFallingEdge(PIN, PINNumber);//(PIN & ON << PINNumber) >> PINNumber;
@@ -144,7 +144,7 @@ struct Debounce
     }
 
     /* Debounce Input Falling Edge Class */
-    public: bool Input(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
+    public: volatile inline bool Input(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
     {   
         bool LastCycle = Actual;
         Actual = OnFallingEdge(PIN, PINNumber);//(PIN & ON << PINNumber) >> PINNumber;
@@ -160,7 +160,7 @@ struct Debounce
     }
 
     /* Debounce Input Rising Edge Class */
-    public: bool InputR(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
+    public: volatile inline bool InputR(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
     {   
         bool LastCycle = Actual;
         Actual = OnRisingEdge(PIN, PINNumber);//(PIN & ON << PINNumber) >> PINNumber;
@@ -177,7 +177,7 @@ struct Debounce
 
     private: double TimeElapsedR;
     /* Debounce Input Rising Edge Class */
-    public: bool OnRisingEdge(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
+    public: volatile inline bool OnRisingEdge(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
     {   
         bool Actual = (PIN & ON << PINNumber) >> PINNumber;
         
@@ -202,7 +202,7 @@ struct Debounce
 
     private: double TimeElapsedF;
     /* Debounce Input Falling Edge Class */
-    public: bool OnFallingEdge(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
+    public: volatile inline bool OnFallingEdge(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
     {   
         bool Actual = (PIN & ON << PINNumber) >> PINNumber;
         
@@ -240,7 +240,7 @@ struct Pulse
     
     private: flag ActualF;
     /* Ouptuts one cycle pulse at the Falling Edge for a given input */
-    public: inline bit Falling(bit In)
+    public: volatile inline bit Falling(bit In)
     {
        bool LastCycle = ActualF;
         ActualF = !In;
@@ -255,7 +255,7 @@ struct Pulse
 
     private: flag ActualR;
     /* Ouptuts one cycle pulse at the Rising Edge for a given input */
-    public: bit Rising(bit In)
+    public: volatile inline bit Rising(bit In)
     {
         bool LastCycle = ActualR;
         ActualR = In;

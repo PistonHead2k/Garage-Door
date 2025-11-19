@@ -8,12 +8,12 @@ FOLDER = ELF
 #-mmcu means Microcontroler I.E. -mmcu=atmega328p, ...2560..., etc
 MCU  = atmega328
 #-O means Optimization I.E. -O0, -O1, -O2, -O3, -Os.
-OPTM = -O3
+OPTM = -O1 #O1 because it tries to optimize ^ XOR and & AND and breaks everything
 #-l means for Library I.E. -lm for math library.
 LIBS = -lm -lc
 
 #-P means PORT. in Windows: COM1, COM2, COM3, etc.
-PORT = COM15
+PORT = COM3
 #-b means Port Speed in Bauds.
 BAUD = 115200
 

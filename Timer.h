@@ -2,10 +2,12 @@
 #ifndef Timer
 #define Timer
 
+#include <math.h> //for fabs
 
 /* Standard Timer Library. Uses Timer/Counter0 */
 namespace Timer
 {
+
 
 #include <avr/interrupt.h>
 
