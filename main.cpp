@@ -22,9 +22,7 @@
 
 #include "IO.h"
 
-
-
-IO::Debounce Debounce1;
+IO::Debounce Debounce1, Debounce2, Debounce3;
 
 
 /* Timer Subroutine */
@@ -64,16 +62,23 @@ int main(void)
     Bit::Out(&DDRB, 3, OUTPUT);
     Bit::Out(&DDRB, 4, OUTPUT);
 
-    //Sets PORTD2 as input w pullup
+    //Sets PORTD2-4 as input w pullup
     Bit::Out(&DDRD, 2, INPUT);
     P.D2 = PULLUP;
+    Bit::Out(&DDRD, 3, INPUT);
+    P.D3 = PULLUP;
+    Bit::Out(&DDRD, 4, INPUT);
+    P.D4 = PULLUP;
+    
 
-    //Enables Pin Change Interrupts For PCIE2 (PCINT18);
+    //Enables Pin Change Interrupts For PCIE2 (PCINT18-20);
     Bit::Set(&PCICR, PCIE2);
 
     //These registers specify which individual pins within the enabled port 
     //will trigger an interrupt. Each bit corresponds to a specific pin.
     Bit::Set(&PCMSK2, PCINT18);
+    Bit::Set(&PCMSK2, PCINT19);
+    Bit::Set(&PCMSK2, PCINT20);
 
     while(true)
     {
@@ -86,10 +91,18 @@ int main(void)
         bit MotorOpen;
         bit MotorClose;
 
+        /* Remote Control Pulse Input */
         bit RemoteInput = Debounce1.Input(~PCIN2, 2);
+        /* Endstop Open Pulse Input */
+        bit EndOpenInput = Debounce2.Input(~PCIN2, 3);
+        /* Endstop Close Pulse Input */
+        bit EndCloseInput = Debounce3.Input(~PCIN2, 4);
+
+        if (EndOpenInput) USART::Debug::SendString("OPEN ENDSTOP");
+        if (EndCloseInput) USART::Debug::SendString("CLOSE ENDSTOP");
 
 
-       ;
+       
         //Start Moving Garage Door
         static flag Start;
         static Electric::Pulse Pulse0;
@@ -102,6 +115,7 @@ int main(void)
 
         MotorOpen = Dir & Start;
         MotorClose = !Dir & Start;
+        
         P.B1 = !MotorOpen;
         P.B2 = !MotorClose;
 
