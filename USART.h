@@ -74,10 +74,9 @@ void SendString(const char* String)
         UDR0 = (uint8_t)String[i];
     }
 }
-
+}
 #endif
 
-}
 }
 
 #if defined(DEBUG)

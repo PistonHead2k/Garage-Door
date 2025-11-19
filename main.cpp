@@ -57,6 +57,12 @@ int main(void)
     Bit::Out(&DDRB, 3, OUTPUT); //Aux
     Bit::Out(&DDRB, 4, OUTPUT); //Aux
 
+    //Sets PORTB bit 1 - 4 HIGH to make relays LOW on the first cycle;
+    Bit::Out(&PORTB, 1, HIGH);
+    Bit::Out(&PORTB, 2, HIGH);
+    Bit::Out(&PORTB, 3, HIGH);
+    Bit::Out(&PORTB, 4, HIGH);
+
     //Sets PORTD2-4 as input w pullup
     Bit::Out(&DDRD, 2, INPUT); //Controller Input
     P.D2 = PULLUP;
