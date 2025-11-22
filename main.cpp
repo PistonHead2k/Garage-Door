@@ -3,7 +3,7 @@
 #endif
 
 #define F_CPU 16000000UL
-#define DEBUG
+//#define DEBUG
 
 #include <math.h> //for fabs for some reason only works here
 #include <avr/io.h>
@@ -44,7 +44,9 @@ int main(void)
     //Enables Interrupt Handler to Interrupt CPU
     sei();
 
+    #if defined(DEBUG)
     USART::Init(250000); //USART Init
+    #endif
     
     Timer::Start(); //Starts The Program Timer
 
