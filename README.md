@@ -5,9 +5,6 @@ It was tested on my 12vdc battery powered with 220vca charger garage door system
 </div>
 
 
-## PS2-GE
-Game Engine for the PS2, currently doing a demo game to test its functionality
-
 ## Current Status
 - [x] Program Ready to Upload
 - [x] Tested and Working with arduino uno board and relay module (1 day)
