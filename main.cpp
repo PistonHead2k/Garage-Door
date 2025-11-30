@@ -8,6 +8,7 @@
 #include <math.h> //for fabs for some reason only works here
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/delay.h>
 
 #include "std.h"
 
@@ -18,13 +19,18 @@
 
 IO::Debounce Debounce1, Debounce2, Debounce3;
 
-#if defined(DEBUG) 
+
 /* Timer Subroutine */
 void TS1(void)
 {
+    #if defined(DEBUG) 
     USART::Debug::SendString(ToStringBinary(PIND));
+    #endif
+
+    P.B5 ^= 1; //Toggle led builtin
+
 }
-#endif
+
 
 //Pin 2 (PCINT18 capture input interrupt)
 uint8_t PCIN2;
@@ -41,6 +47,20 @@ void FixedLoop(void)
 
 int main(void)
 {   
+    //Ses PORTB bit 1 - 4 as Output
+    Bit::Out(&DDRB, 1, OUTPUT); //Motor Relay 1
+    Bit::Out(&DDRB, 2, OUTPUT); //Motor Relay 2
+    Bit::Out(&DDRB, 3, OUTPUT); //Aux
+    Bit::Out(&DDRB, 4, OUTPUT); //Aux
+
+    Bit::Out(&DDRB, 5, OUTPUT); //Led builtin
+
+    //Sets PORTB bit 1 - 4 HIGH to make relays LOW on the first cycle;
+    Bit::Out(&PORTB, 1, HIGH);
+    Bit::Out(&PORTB, 2, HIGH);
+    Bit::Out(&PORTB, 3, HIGH);
+    Bit::Out(&PORTB, 4, HIGH);
+
     //Enables Interrupt Handler to Interrupt CPU
     sei();
 
@@ -53,17 +73,6 @@ int main(void)
     Timer::TIMER0_OVF_INT = &FixedLoop; //Starts FixedLoop
 
     
-   //Ses PORTB bit 1 - 4 as Output
-    Bit::Out(&DDRB, 1, OUTPUT); //Motor Relay 1
-    Bit::Out(&DDRB, 2, OUTPUT); //Motor Relay 2
-    Bit::Out(&DDRB, 3, OUTPUT); //Aux
-    Bit::Out(&DDRB, 4, OUTPUT); //Aux
-
-    //Sets PORTB bit 1 - 4 HIGH to make relays LOW on the first cycle;
-    Bit::Out(&PORTB, 1, HIGH);
-    Bit::Out(&PORTB, 2, HIGH);
-    Bit::Out(&PORTB, 3, HIGH);
-    Bit::Out(&PORTB, 4, HIGH);
 
     //Sets PORTD2-4 as input w pullup
     Bit::Out(&DDRD, 2, INPUT); //Controller Input
@@ -72,7 +81,7 @@ int main(void)
     P.D3 = PULLUP;
     Bit::Out(&DDRD, 4, INPUT); //Close Endstop Input
     P.D4 = PULLUP;
-    
+    P.BitsToRegister();
 
     //Enables Pin Change Interrupts For PCIE2 (PCINT18-20);
     Bit::Set(&PCICR, PCIE2);
@@ -90,10 +99,8 @@ int main(void)
         #define flag bit
 
         //Debug Timed Subroutine
-        #if defined(DEBUG) 
         static Timer::Subroutine T1;
         T1.Wait(0.5f, &TS1);
-        #endif
 
         /* Remote Control Pulse Input */
         bit RemoteInput = Debounce1.Input(~PCIN2, 2);
@@ -145,5 +152,6 @@ int main(void)
 
         //OUT GPIO
         P.BitsToRegister();
+        //_delay_ms(1);
     }
 }

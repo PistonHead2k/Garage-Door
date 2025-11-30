@@ -119,7 +119,7 @@ struct Debounce
     #define OFF 0
 
     /* Time wich the input has to be at the same logic level */
-    public: double Time = 0.1;
+    public: double Time = 0.25f;
     
     private: bool Actual;
     
@@ -205,13 +205,13 @@ struct Debounce
     public: volatile inline bool OnFallingEdge(uint8_t PIN, uint8_t PINNumber, double TimeRef = Timer::Seconds())
     {   
         bool Actual = (PIN & ON << PINNumber) >> PINNumber;
+        static bool Last;
         
-        bool Out;
-
+        bool Out = ON;
+        
         if (Actual)
         {
             TimeElapsedF = TimeRef;
-            Out = ON;
         }
 
         //fabs is for Overflow Protection
@@ -220,7 +220,7 @@ struct Debounce
             Out = OFF;
         }
      
-
+        Last = Actual;
         return Out;
     }
 };
